@@ -1,0 +1,13 @@
+{
+  "name": "cli-moon-spinner",
+  "version": "1.0.0",
+  "description": "A CLI loader animated with the moon phase emojis",
+  "main": "index.js",
+  "repository": "https://github.com/btoo/cli-moon-spinner.git",
+  "author": "https://github.com/btoo",
+  "license": "MIT",
+  "dependencies": {
+    "cli-spinner": "^0.2.6",
+    "node-emoji": "^1.5.1"
+  }
+}
