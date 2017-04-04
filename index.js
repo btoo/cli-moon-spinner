@@ -36,23 +36,23 @@ module.exports = ({
     if(stopText) console.log(stopText)
   }
 
-  const spinner = ellipsis
-    ? new Spinner({
-        onTick: function(msg){
-          this.clearLine(this.stream)
-          let genValMod = gen.next().value % 10
-          this.stream.write(`  ${textBefore}${moonPhases[genValMod]}  ${textAfter}${
-            genValMod > 7.5 ?
-              '...'
-            : genValMod > 5 ?
-              '.. '
-            : genValMod > 2.5 ?
-              '.  '
-            : '   '
-          } `)
-        }
-      })
-    : new Spinner()
+  const spinner = new Spinner({
+    onTick: function(msg){
+      this.clearLine(this.stream)
+      let genValMod = gen.next().value % 10
+      this.stream.write(`  ${textBefore}${moonPhases[genValMod]}  ${textAfter}${
+        !ellipsis ?
+          ''
+        : genValMod > 7.5 ?
+          '...'
+        : genValMod > 5 ?
+          '.. '
+        : genValMod > 2.5 ?
+          '.  '
+        : '   '
+      } `)
+    }
+  })
 
   spinner.start()
   return cb(spinner)
