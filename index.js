@@ -18,26 +18,42 @@ const Spinner = require('cli-spinner').Spinner
       emoji.get('last_quarter_moon'),
       emoji.get('waning_crescent_moon')
     ]
+  , gen = emojiGenerator()
 
-module.exports = (textBefore='', textAfter='') => cb => {
-  let gen = emojiGenerator()
-  let spinner = new Spinner({
-    onTick: function(msg){
-      this.clearLine(this.stream)
-      let genValMod = gen.next().value % 10
-      this.stream.write(`  ${textBefore}${moonPhases[genValMod]}  ${textAfter}${
-        genValMod > 7.5 ?
-          '...'
-        : genValMod > 5 ?
-          '.. '
-        : genValMod > 2.5 ?
-          '.  '
-        : '   '
-      } `)
-    }
-  })
-  // spinner.setSpinnerString('⠁⠁⠉⠙⠚⠒⠂⠂⠒⠲⠴⠤⠄⠄⠤⠠⠠⠤⠦⠖⠒⠐⠐⠒⠓⠋⠉⠈⠈')
+module.exports = ({
+  textBefore = '',
+  textAfter = '',
+  ellipsis = true,
+  stopText = 'Done'
+} = {}) => cb => {
+
+  Spinner.prototype.stop = function(clear) {
+    clearInterval(this.id)
+    this.id = undefined
+
+    if(clear) this.clearLine(this.stream)
+    
+    if(stopText) console.log(stopText)
+  }
+
+  const spinner = ellipsis
+    ? new Spinner({
+        onTick: function(msg){
+          this.clearLine(this.stream)
+          let genValMod = gen.next().value % 10
+          this.stream.write(`  ${textBefore}${moonPhases[genValMod]}  ${textAfter}${
+            genValMod > 7.5 ?
+              '...'
+            : genValMod > 5 ?
+              '.. '
+            : genValMod > 2.5 ?
+              '.  '
+            : '   '
+          } `)
+        }
+      })
+    : new Spinner()
+
   spinner.start()
-
   return cb(spinner)
 }
